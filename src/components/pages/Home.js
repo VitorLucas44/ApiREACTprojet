@@ -14,18 +14,27 @@ export default function Home() {
     useEffect(() => {
         getData();
     }, [])
-
+    
     const getData = () => {
         fetch("https://restcountries.com/v3.1/all")
             .then(res => res.json())
             .then(
                 (results) => {
                     setIsLoaded(true);
+                    results.sort((a, b) => {
+                        if (a.name.common < b.name.common) {
+                            return -1;
+                        }
+                        if (a.name.common > b.name.common) {
+                            return 1;
+                        }
+                        return 0;
+                    });
                     setItems(results);
-                    // console.log(results)
                 }
             )
     }
+    
     const handleChangeInput = (e) => {
         setSearchInput(e.target.value);
     }
@@ -42,7 +51,6 @@ export default function Home() {
         setFilteredItems(result);
         console.log(result);
         }, [searchInput, items, selectInput]);
-
     return (
         <section className="home">
             <form className="form flex flex-wrap">
